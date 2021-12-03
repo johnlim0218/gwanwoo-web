@@ -32,7 +32,7 @@ const components = {
 };
 
 const fonts = {
-  heading: "'M Plus Rounded 1c'"
+  heading: "'Spoqa Han Sans Neo'"
 };
 
 const colors = {
