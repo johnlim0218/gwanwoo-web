@@ -67,7 +67,7 @@ const Index = () => {
         </Box>
       </Section>
 
-      <Section delay={0.5}>
+      <Section delay={0.3}>
         <Heading as="h3" variant="section-title">
           Bio
         </Heading>
@@ -85,7 +85,7 @@ const Index = () => {
         </BioSection>
       </Section>
 
-      <Section delay={0.9}>
+      <Section delay={0.5}>
         <Heading as="h3" variant="section-title">
           I ♥
         </Heading>
