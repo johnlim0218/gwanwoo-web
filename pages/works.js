@@ -3,12 +3,12 @@ import Layout from '../components/layout/article';
 import Section from '../components/section';
 import { WorkGridItem } from '../components/grid-item';
 
-import thumbUsle from '../public/images/works/thumbs/usle_thumb.png';
-import thumbPrintingCider from '../public/images/works/thumbs/printing_cider_thumb.png';
-import thumbRWS from '../public/images/works/thumbs/rws_thumb.png';
-import thumbDanmoon from '../public/images/works/thumbs/danmoon_thumb.png';
-import thumbBluemarble from '../public/images/works/thumbs/bluemarble_thumb.png';
-import thumbMatcha from '../public/images/works/thumbs/matcha_thumb.png';
+import thumbUsle from '../public/images/works/thumbs/usle_thumb.jpg';
+import thumbPrintingCider from '../public/images/works/thumbs/printing_cider_thumb.jpg';
+import thumbRWS from '../public/images/works/thumbs/rws_thumb.jpg';
+import thumbDanmoon from '../public/images/works/thumbs/danmoon_thumb.jpg';
+import thumbBluemarble from '../public/images/works/thumbs/bluemarble_thumb.jpg';
+import thumbMatcha from '../public/images/works/thumbs/matcha_thumb.jpg';
 
 const Works = () => {
   return (

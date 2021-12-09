@@ -17,7 +17,7 @@ const LogoBox = styled.span`
 `;
 
 const Logo = () => {
-  const footPrintImage = `/images/footprint${useColorModeValue('', '-dark')}.png`;
+  const footPrintImage = `/images/hardhat${useColorModeValue('', '-dark')}.png`;
 
   return (
     <Link href='/'>
@@ -26,7 +26,7 @@ const Logo = () => {
           <Image src={footPrintImage} width={20} height={20} alt="logo" />
           <Text 
             color={useColorModeValue('gray.800', 'whiteAlpha.900')}
-            fontFamily='M PLUS Rounded 1c'
+            // fontFamily='M PLUS Rounded 1c'
             fontWeight="bold"
             ml={3}
           >

@@ -39,11 +39,12 @@ const Character = () => {
     }
   }, [renderer]);
 
-  let mixer;
-  let actions;
-
+  
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
+    let mixer;
+    let actions;
+    
     const { current: container } = refContainer;
     if (container && !renderer) {
       const scW = container.clientWidth;
@@ -93,22 +94,22 @@ const Character = () => {
       // grid.material.transparent = true;
       // scene.add( grid );
 
-      let mixers = [];
+      // let mixers = [];
       new Promise((resolve, reject) => {
         const loader = new FBXLoader();
-        loader.load( '/assets/FireFighter.fbx', ( object ) => {
-          mixer = new THREE.AnimationMixer( object );
+        loader.load('/assets/FireFighter.fbx', (object) => {
+          mixer = new THREE.AnimationMixer(object);
           actions = [];
           
           // object.mixer = new THREE.AnimationMixer( object );
           object.scale.set(0.5, 0.5, 0.5);
-          mixers.push( object.mixer );
+          // mixers.push( object.mixer );
 
           // const action = object.mixer.clipAction( object.animations[ 0 ] );
           // action.play();
 
-          object.traverse(( child ) => {
-            if( child.isMesh ) {
+          object.traverse((child) => {
+            if(child.isMesh) {
               // child.material.map = null;
               child.castShadow = true;
               child.receiveShadow = true;
@@ -116,14 +117,15 @@ const Character = () => {
           })
 
           const tloader = new THREE.TextureLoader();
-          tloader.load("/assets/FireFighter.png", ( texture ) => {
+          tloader.load("/assets/FireFighter.png", (texture ) => {
               object.traverse(( child ) => {
                 if ( child.isMesh ) child.material.map = texture;
               });
           });
   
-          scene.add( object );
-          resolve( object );
+          scene.add(object);
+
+          resolve(object);
         },
         undefined,
         (error) => {
@@ -132,11 +134,10 @@ const Character = () => {
         )
 
         loader.load( '/assets/Walking.fbx', (object) => {
-          const action = mixer.clipAction( object.animations[ 0 ] );
+          const action = mixer.clipAction(object.animations[0]);
           actions.push(action);
-          console.log(object.animations [ 0 ]);
-          object.traverse(( child ) => {
-            if( child.isMesh ) {
+          object.traverse((child) => {
+            if(child.isMesh) {
               child.castShadow = true;
               child.receiveShadow = false;
             }
@@ -149,7 +150,7 @@ const Character = () => {
         setLoading(false);
       })
 
-      const controls = new OrbitControls ( camera, renderer.domElement );
+      const controls = new OrbitControls(camera, renderer.domElement);
       controls.autoRotate = true;
       controls.target = target;
       // controls.target.set( 0, 60, 0 );

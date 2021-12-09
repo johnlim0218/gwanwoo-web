@@ -31,7 +31,7 @@ const Index = () => {
 
         <Box display={{ md:'flex' }}>
           <Box flexGrow={1}>
-            <Heading as="h2" variant="page-title">
+            <Heading as="h2" fontSize={30} variant="page-title">
               Lim Gwanwoo(임관우)
             </Heading>
             <p>Developer / Photographer / Writer</p>
