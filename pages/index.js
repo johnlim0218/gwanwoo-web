@@ -96,18 +96,23 @@ const Index = () => {
           </Heading>
           <BioSection>
             <BioYear>1986</BioYear>
-            광주에서 태어났습니다.<br/>
-            Born in Gwang-ju, Korea.<br/>
+            광주에서 태어났습니다.<br />
+            Born in Gwang-ju, Korea.<br />
           </BioSection>
           <BioSection>
             <BioYear>2012</BioYear>
-            한양대학교에서 문학사(신문방송학전공)를 취득했습니다.<br/>
-            Acquired a Bachelor&apos;s degree of Jounalism.<br/>
+            한양대학교에서 문학사(신문방송학전공)를 취득했습니다.<br />
+            Acquired a Bachelor&apos;s degree of Jounalism.<br />
           </BioSection>
           <BioSection>
             <BioYear>2019</BioYear>
-            코리아IT 아카데미에서 웹개발, DBMS과정을 수료했습니다.<br/>
-            Completed Web Developer Curriculum.<br/>
+            코리아IT 아카데미에서 웹개발, DBMS과정을 수료했습니다.<br />
+            Completed Web Developer Curriculum.<br />
+          </BioSection>
+          <BioSection>
+            <BioYear>2019 ~</BioYear>
+            풀스택개발자로 일하고 있습니다.<br />
+            Work as a full-stack developer<br />
           </BioSection>
         </Section>
 
