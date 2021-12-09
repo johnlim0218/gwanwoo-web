@@ -25,7 +25,8 @@ const Index = () => {
     <Layout>
       <Container>
         <Box borderRadius="lg" bg={useColorModeValue('whiteAlpha.500', 'whiteAlpha.200')} p={3} mb={6} align="center">
-          Hello, I&apos;m a full-stack developer based in KOREA!
+          웹 풀스택 개발자 임관우입니다.<br />
+          Hello, I&apos;m a full-stack developer based in KOREA!<br />
         </Box>
 
         <Box display={{ md:'flex' }}>
@@ -58,14 +59,21 @@ const Index = () => {
           <Heading as="h3" variant="section-title">
             Work
           </Heading>
-          {/* TODO ::::: */}
           <Paragraph>
-            Gwanwoo is a a full-stack developer based in Seoul with a
+            사회에 도움이 되는 개발자가 되려 합니다. 이웃, 사회의 일에 민감하게 반응합니다. 주변의
+            문제를 코딩으로 해결해보고자 합니다. 현재는 제로웨이스트 쇼핑몰 {' '}
+            <NextLink href="/works/usle">
+              <Link>우슬레</Link>
+            </NextLink>
+            에 집중하고 있습니다.
+          </Paragraph>
+        </Section>
+        <Section delay={0.1}>
+          <Paragraph>
+            Gwanwoo is a full-stack developer based in Seoul with a
             passion for building digital services/stuff he wants. He has a knack
             for all things launching products, from planning and build all the
-            way to solving real-life problems with code. When not online, he loves
-            hanging out with his camera. {' '}
-            {/* TODO ::::  */}
+            way to solving real-life problems with code. 
             Currently, he is living off of his own
             product called{' '}
             <NextLink href="/works/usle">
@@ -81,29 +89,39 @@ const Index = () => {
             </NextLink>
           </Box>
         </Section>
-
+      
         <Section delay={0.3}>
           <Heading as="h3" variant="section-title">
             Bio
           </Heading>
           <BioSection>
             <BioYear>1986</BioYear>
-            Born in Gwang-ju, Korea.
+            광주에서 태어났습니다.<br/>
+            Born in Gwang-ju, Korea.<br/>
           </BioSection>
           <BioSection>
             <BioYear>2012</BioYear>
-            Acquired a Bachelor&apos;s degree of Jounalism.
+            한양대학교에서 문학사(신문방송학전공)를 취득했습니다.<br/>
+            Acquired a Bachelor&apos;s degree of Jounalism.<br/>
           </BioSection>
           <BioSection>
             <BioYear>2019</BioYear>
-            Completed Web Developer Curriculum 
+            코리아IT 아카데미에서 웹개발, DBMS과정을 수료했습니다.<br/>
+            Completed Web Developer Curriculum.<br/>
           </BioSection>
         </Section>
+
 
         <Section delay={0.5}>
           <Heading as="h3" variant="section-title">
             I ♥
           </Heading>
+          <Paragraph>
+            영화와 음악을 좋아합니다. 사진과 글쓰기를 좋아합니다. 밴드활동을 하고 있습니다.
+            컴퓨터 게임으로 스트레스를 해소합니다.
+          </Paragraph>
+        </Section>
+        <Section delay={0.5}>
           <Paragraph>
             Movie, Music, {' '}
             <Link href="https://brunch.co.kr/@zanki99" target="_blank">
