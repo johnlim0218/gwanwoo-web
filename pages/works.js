@@ -3,8 +3,12 @@ import Layout from '../components/layout/article';
 import Section from '../components/section';
 import { WorkGridItem } from '../components/grid-item';
 
-import thumbInkdrop from '../public/images/works/inkdrop_eyecatch.png';
-import thumbModeTokyo from '../public/images/works/modetokyo_eyecatch.png';
+import thumbUsle from '../public/images/works/thumbs/usle_thumb.png';
+import thumbPrintingCider from '../public/images/works/thumbs/printing_cider_thumb.png';
+import thumbRWS from '../public/images/works/thumbs/rws_thumb.png';
+import thumbDanmoon from '../public/images/works/thumbs/danmoon_thumb.png';
+import thumbBluemarble from '../public/images/works/thumbs/bluemarble_thumb.png';
+import thumbMatcha from '../public/images/works/thumbs/matcha_thumb.png';
 
 const Works = () => {
   return (
@@ -14,16 +18,24 @@ const Works = () => {
           Works
         </Heading> 
         <SimpleGrid columns={[ 1, 1, 2 ]} gap={6}>
-          <Section delay={0.1}>
-            {/* TODO ::::: */}
-            <WorkGridItem id="USLE" title="USLE" thumbnail={thumbInkdrop}>
-              A Markdown note-taking app with 100+ plugins, cross-platform and
-              encrypted data sync support
+          <Section>
+            <WorkGridItem id="usle" title="우슬레" thumbnail={thumbUsle}>
+              제로웨이스트 쇼핑몰 우슬레의 웹페이지입니다. 우슬레의 웹페이지에는 B2C, B2B 페이지가 있습니다.
+            </WorkGridItem>
+          </Section>
+          <Section>
+            <WorkGridItem id="printingcider" title="프린팅사이다" thumbnail={thumbPrintingCider}>
+              인쇄 플랫폼에 크라우드 펀딩을 접목시킨 서비스입니다.
+            </WorkGridItem>
+          </Section>
+          <Section delay={0.3}>
+            <WorkGridItem id="rws" title="RWS" thumbnail={thumbRWS}>
+              미국의 수학능력시험인 SAT를 준비하는 학생들을 위한 학습 웹서비스입니다.
             </WorkGridItem>
           </Section>
         </SimpleGrid>
 
-        <Section delay={0.2}>
+        {/* <Section delay={0.2}>
           <Divider my={6} />
 
           <Heading as="h3" fontSize={20} mb={4}>
@@ -33,12 +45,11 @@ const Works = () => {
 
         <SimpleGrid columns={[ 1, 1, 2 ]} gap={6}>
           <Section delay={0.3}>
-            {/* TODO ::::: */}
             <WorkGridItem id="test" title="test" thumbnail={thumbModeTokyo}>
             A VR Creative tools for fashion brands
             </WorkGridItem>
           </Section>
-        </SimpleGrid>
+        </SimpleGrid> */}
 
 
         <Section delay={0.5}>
@@ -50,10 +61,20 @@ const Works = () => {
         </Section>
 
         <SimpleGrid columns={[ 1, 1, 2 ]} gap={6}>
-          <Section delay={0.3}>
-            {/* TODO ::::: */}
-            <WorkGridItem id="test" title="test" thumbnail={thumbModeTokyo}>
-            A VR Creative tools for fashion brands
+          <Section delay={0.5}>
+            <WorkGridItem id="danmoon" title="단문" thumbnail={thumbDanmoon}>
+              하루 중 정해진 시간에 글감을 사용자에게 보내, 글쓰기에 대한 부담을 덜어주고자 기획한 서비스입니다.
+            </WorkGridItem>
+          </Section>
+          <Section delay={0.5}>
+            <WorkGridItem id="bluemarble" title="게임 블루마블" thumbnail={thumbBluemarble}>
+              Java로 제작된 보드게임 블루마블입니다.
+            </WorkGridItem>
+          </Section>
+
+          <Section delay={0.7}>
+            <WorkGridItem id="matcha" title="MATCHA" thumbnail={thumbMatcha}>
+              영화진흥위원회 공공데이터를 활용한 영화 정보 검색 서비스입니다.
             </WorkGridItem>
           </Section>
         </SimpleGrid>

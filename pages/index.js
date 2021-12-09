@@ -1,10 +1,23 @@
 import NextLink from 'next/link';
-import { Container, Box, Heading, Image, Link, Button, useColorModeValue } from '@chakra-ui/react';
+import { 
+  Container, 
+  Box, 
+  Heading, 
+  Image, 
+  Link, 
+  Button, 
+  Icon,
+  List,
+  ListItem,
+  // SimpleGrid,
+  useColorModeValue } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons';
 import Layout from '../components/layout/article';
 import Section from '../components/section';
 import Paragraph from '../components/paragraph';
 import { BioSection, BioYear } from '../components/bio';
+// import { GridItem } from '../components/grid-item';
+import { IoLogoInstagram, IoLogoGithub } from 'react-icons/io5';
 
 const Index = () => {
 
@@ -35,7 +48,7 @@ const Index = () => {
               maxWidth="100px" 
               display="inline-block" 
               borderRadius="full" 
-              // src="/images/takuya.jpg" 
+              src="/images/gwanwoo_lim.jpeg" 
               alt="Profile Image" 
             />
           </Box>
@@ -51,12 +64,12 @@ const Index = () => {
             passion for building digital services/stuff he wants. He has a knack
             for all things launching products, from planning and build all the
             way to solving real-life problems with code. When not online, he loves
-            hanging out with his camera. 
+            hanging out with his camera. {' '}
             {/* TODO ::::  */}
             Currently, he is living off of his own
             product called{' '}
-            <NextLink href="/works/inkdrop">
-              <Link>Inkdrop</Link>
+            <NextLink href="/works/usle">
+              <Link>USLE</Link>
             </NextLink>
             .
           </Paragraph>
@@ -98,6 +111,49 @@ const Index = () => {
             </Link>
             , Sing a song as a Vocal in a Band, Playing Computer Game
           </Paragraph>
+        </Section>
+
+        <Section delay={0.7}>
+          <Heading as="h3" variant="section-title">
+            On the web
+          </Heading>
+          <List>
+            <ListItem>
+              <Link href="https://github.com/johnlim0218" target="_blank">
+                <Button 
+                  variant="ghost" 
+                  colorScheme="teal" 
+                  leftIcon={<Icon as={IoLogoGithub}/>}
+                >
+                  @johnlim0218
+                </Button>
+              </Link>
+            </ListItem>
+
+            <ListItem>
+              <Link href="https://cafe.naver.com/hoodcoat" target="_blank">
+                <Button 
+                  variant="ghost" 
+                  colorScheme="teal" 
+                  leftIcon={<Image src="/images/naver_cafe.svg" alt="image" />}
+                >
+                  cafe.naver.com/hoodcoat
+                </Button>
+              </Link>
+            </ListItem>
+
+            <ListItem>
+              <Link href="https://instagram.com/gwan_woo_lim" target="_blank">
+                <Button
+                  variant="ghost"
+                  colorScheme="teal"
+                  leftIcon={<Icon as={IoLogoInstagram}/>}
+                >
+                  @gwan_woo_lim
+                </Button>
+              </Link>
+            </ListItem>
+          </List>
         </Section>
       </Container>
     </Layout>
