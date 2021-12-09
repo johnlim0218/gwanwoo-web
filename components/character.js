@@ -4,11 +4,9 @@ import * as THREE from 'three';
 import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
-function easeOutCirc(x) {
-  return Math.sqrt(1 - Math.pow(x - 1, 4))
-}
-
-// const animations = ["walking"];
+// function easeOutCirc(x) {
+//   return Math.sqrt(1 - Math.pow(x - 1, 4))
+// }
 
 const Character = () => {
   const refContainer = useRef();
@@ -16,18 +14,20 @@ const Character = () => {
   const [renderer, setRenderer] = useState();
   const [_camera, setCamera] = useState();
   const [target] = useState(new THREE.Vector3(0, 50, 0));
-  const [initialCameraPosition] = useState(
-    new THREE.Vector3(
-      // 20 * Math.sin(0.2 * Math.PI),
-      // 10,
-      // 20 * Math.cos(0.2 * Math.PI)
-      100,
-      250,
-      500
-    )
-  )
+  // const [initialCameraPosition] = useState(
+  //   new THREE.Vector3(
+  //     // 20 * Math.sin(0.2 * Math.PI),
+  //     // 10,
+  //     // 20 * Math.cos(0.2 * Math.PI)
+  //     100,
+  //     250,
+  //     500
+  //   )
+  // )
   const [scene] = useState(new THREE.Scene());
   const [_controls, setControls] = useState();
+  const [clock] = useState(new THREE.Clock());
+  // const [animations] = useState(['Walking']);
   
   const handleWindowResize = useCallback(() => {
     const { current: container } = refContainer;
@@ -39,7 +39,9 @@ const Character = () => {
     }
   }, [renderer]);
 
-  
+  let mixer;
+  let actions;
+
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const { current: container } = refContainer;
@@ -75,7 +77,7 @@ const Character = () => {
       light.position.set( 0, 200, 100 );
       light.castShadow = true;
       light.shadow.camera.top = 180;
-      light.shadow.camera.bottom = - 100;
+      light.shadow.camera.bottom = -100;
       light.shadow.camera.left = - 120;
       light.shadow.camera.right = 120;
       // const light = new THREE.AmbientLight( 0xffffff );
@@ -91,21 +93,19 @@ const Character = () => {
       // grid.material.transparent = true;
       // scene.add( grid );
 
-      // let mixer;
-      // let actions; 
       let mixers = [];
       new Promise((resolve, reject) => {
         const loader = new FBXLoader();
         loader.load( '/assets/FireFighter.fbx', ( object ) => {
-          // mixer = new THREE.AnimationMixer( object );
-          // actions = [];
-          object.mixer = new THREE.AnimationMixer( object );
+          mixer = new THREE.AnimationMixer( object );
+          actions = [];
+          
+          // object.mixer = new THREE.AnimationMixer( object );
           object.scale.set(0.5, 0.5, 0.5);
           mixers.push( object.mixer );
 
-          console.log(object.animations)
-          const action = object.mixer.clipAction( object.animations[ 0 ] );
-          action.play();
+          // const action = object.mixer.clipAction( object.animations[ 0 ] );
+          // action.play();
 
           object.traverse(( child ) => {
             if( child.isMesh ) {
@@ -118,8 +118,7 @@ const Character = () => {
           const tloader = new THREE.TextureLoader();
           tloader.load("/assets/FireFighter.png", ( texture ) => {
               object.traverse(( child ) => {
-                console.log(child.isMesh);
-                  if ( child.isMesh ) child.material.map = texture;
+                if ( child.isMesh ) child.material.map = texture;
               });
           });
   
@@ -131,6 +130,20 @@ const Character = () => {
           reject(error)
         }
         )
+
+        loader.load( '/assets/Walking.fbx', (object) => {
+          const action = mixer.clipAction( object.animations[ 0 ] );
+          actions.push(action);
+          console.log(object.animations [ 0 ]);
+          object.traverse(( child ) => {
+            if( child.isMesh ) {
+              child.castShadow = true;
+              child.receiveShadow = false;
+            }
+          })
+          action.play();
+          scene.add( object );
+        })
       }).then(() => {
         animate();
         setLoading(false);
@@ -144,7 +157,7 @@ const Character = () => {
       setControls(controls);
 
       const req = null;
-      let frame = 0;
+      // let frame = 0;
 
       // const loadNextAnim = ( loader ) => {
       //   const anim = animations.pop();
@@ -153,19 +166,27 @@ const Character = () => {
 
       const animate = () => {
         req = requestAnimationFrame(animate);
-        frame = frame <= 100 ? frame + 1 : frame;
+        const delta = clock.getDelta();
 
-        if(frame <= 100) {
-          const p = initialCameraPosition;
-          const rotSpeed = -easeOutCirc(frame / 120) * Math.PI * 20;
+        if( mixer ) mixer.update( delta );
+        // frame = frame <= 100 ? frame + 1 : frame;
+        
+        // if(frame <= 100) {
+        //   const p = initialCameraPosition;
+        //   const rotSpeed = -easeOutCirc(frame / 120) * Math.PI * 20;
 
-          camera.position.y = 100;
-          camera.position.x = p.x * Math.cos(rotSpeed) + p.z * Math.sin(rotSpeed);
-          camera.position.z = p.z * Math.cos(rotSpeed) - p.x * Math.sin(rotSpeed);
-          camera.lookAt(target);
-        } else {
-          controls.update()
-        }
+        //   camera.position.y = 100;
+        //   camera.position.x = p.x * Math.cos(rotSpeed) + p.z * Math.sin(rotSpeed);
+        //   camera.position.z = p.z * Math.cos(rotSpeed) - p.x * Math.sin(rotSpeed);
+        //   camera.lookAt(target);
+        // } else {
+        //   controls.update()
+
+        //   // for(let i = 0; i < mixers.length; i ++) {
+        //   //   mixers[ i ].update( clock.getDelta() )
+        //   // }
+          
+        // }
 
         renderer.render(scene, camera);
       }
