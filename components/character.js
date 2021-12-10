@@ -27,7 +27,6 @@ const Character = () => {
   const [scene] = useState(new THREE.Scene());
   const [_controls, setControls] = useState();
   const [clock] = useState(new THREE.Clock());
-  // const [animations] = useState(['Walking']);
   
   const handleWindowResize = useCallback(() => {
     const { current: container } = refContainer;
@@ -42,9 +41,12 @@ const Character = () => {
   
   /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
+    let idleAction;
+
     let mixer;
-    let actions;
-    
+    const req = null;
+    const animations = ['Walking', 'Hook'];
+
     const { current: container } = refContainer;
     if (container && !renderer) {
       const scW = container.clientWidth;
@@ -81,7 +83,6 @@ const Character = () => {
       light.shadow.camera.bottom = -100;
       light.shadow.camera.left = - 120;
       light.shadow.camera.right = 120;
-      // const light = new THREE.AmbientLight( 0xffffff );
       scene.add(light);
      
       // const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 3000, 3000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
@@ -99,15 +100,8 @@ const Character = () => {
         const loader = new FBXLoader();
         loader.load('/assets/FireFighter.fbx', (object) => {
           mixer = new THREE.AnimationMixer(object);
-          actions = [];
           
-          // object.mixer = new THREE.AnimationMixer( object );
           object.scale.set(0.5, 0.5, 0.5);
-          // mixers.push( object.mixer );
-
-          // const action = object.mixer.clipAction( object.animations[ 0 ] );
-          // action.play();
-
           object.traverse((child) => {
             if(child.isMesh) {
               // child.material.map = null;
@@ -117,35 +111,28 @@ const Character = () => {
           })
 
           const tloader = new THREE.TextureLoader();
-          tloader.load("/assets/FireFighter.png", (texture ) => {
-              object.traverse(( child ) => {
-                if ( child.isMesh ) child.material.map = texture;
-              });
+          tloader.load("/assets/FireFighter.png", (texture) => {
+            object.traverse(( child ) => {
+              if ( child.isMesh ) child.material.map = texture;
+            });
           });
   
           scene.add(object);
 
+          animations.forEach((animation) => {
+            loadNextAnim(animation, loader, reject);
+          })
+          
           resolve(object);
         },
-        undefined,
-        (error) => {
-          reject(error)
-        }
+          undefined,
+          (error) => {
+            reject(error)
+          }
         )
 
-        loader.load( '/assets/Walking.fbx', (object) => {
-          const action = mixer.clipAction(object.animations[0]);
-          actions.push(action);
-          object.traverse((child) => {
-            if(child.isMesh) {
-              child.castShadow = true;
-              child.receiveShadow = false;
-            }
-          })
-          action.play();
-          scene.add( object );
-        })
       }).then(() => {
+        
         animate();
         setLoading(false);
       })
@@ -157,19 +144,68 @@ const Character = () => {
       controls.update();
       setControls(controls);
 
-      const req = null;
+      
+      
+      
       // let frame = 0;
+      
+      const unPauseAllActions = () => {
+        actions.forEach((action) => {
+          action.paused = false;  
+        });
+      }
 
-      // const loadNextAnim = ( loader ) => {
-      //   const anim = animations.pop();
+      const prepareCrossFade = (startAction, endAction, defaultDuration) => {
+        const duration = defaultDuration;
 
-      // }
+        unPauseAllActions();
+
+        if(startAction === idleAction) {
+          executeCrossFade(startAction, endAction, duration);
+        } else {
+          synchronizeCrossFade(startAction, endAction, duration);
+        }
+      }
+
+      const executeCrossFade = (startAction, endAction, duration) => {
+        endAction.time = 0;
+        startAction.crossFadeTo(endAction, duration, true)
+      }
+
+      const synchronizeCrossFade = (startAction, endAction, duration) => {
+        const onLoopFinished = (e) => {
+          if(e.action === startAction) {
+            mixer.removeEventListener('loop', onLoopFinished);
+            executeCrossFade(startAction, endAction, duration)
+          }
+        }
+        mixer.addEventListener('loop', onLoopFinished);
+      }
+
+      const loadNextAnim = (animation, loader, reject) => {
+        loader.load(`/assets/${animation}.fbx`, (object) => {
+          const action = mixer.clipAction(object.animations[0]);
+          object.traverse((child) => {
+            if(child.isMesh) {
+              child.castShadow = true;
+              child.receiveShadow = false;
+            }
+          });
+          action.play();
+          scene.add(object);
+        },
+          undefined,
+          (error) => {
+            reject(error)
+          }
+        )
+      }
 
       const animate = () => {
         req = requestAnimationFrame(animate);
         const delta = clock.getDelta();
-
-        if( mixer ) mixer.update( delta );
+        
+        if( mixer ) mixer.update(delta);
         // frame = frame <= 100 ? frame + 1 : frame;
         
         // if(frame <= 100) {
@@ -188,11 +224,20 @@ const Character = () => {
         //   // }
           
         // }
+        // console.log(scene);
+        renderScene();
+      }
 
+      const renderScene = () => {
         renderer.render(scene, camera);
       }
+
+      const stop = () => {
+        cancelAnimationFrame(req);
+      }
+      
       return () => {
-        cancelAnimationFrame(req)
+        stop();
         renderer.dispose()
       }
     }
