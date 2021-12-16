@@ -203,7 +203,7 @@ const Character = () => {
           // controls.target.set( 0, 60, 0 );
           controls.update();
           setControls(controls);
-        }
+        } 
 
         const loadNextFBXAnimation = (loader, animation) => {
           loader.load(`${assetsPath}fbx/movements/${animation}.fbx`, (object) => {
