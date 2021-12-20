@@ -5,6 +5,7 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { Preloader } from '../libs/preloader';
 import { JoyStick } from '../libs/joystick';
+import { CameraButton } from '../libs/cameraButton';
 // import * as dat from 'data.gui';
 // import { GUI } from 'dat.gui';
 // function easeOutCirc(x) {
@@ -70,6 +71,13 @@ const Character = () => {
         // let joystick;
 
         let player = {};
+        let cameraFade = 0.05;
+        let activeCamera = {
+          set current(object) {
+            player.cameras.active = object;
+          }
+        }
+
         let action = {
           set duration(duration) {
             this.duration = duration;
@@ -83,14 +91,12 @@ const Character = () => {
             }
             
             const action = player.mixer.clipAction(player[name], player.root);
-            console.log(action);
             action
               .reset()
               .setEffectiveTimeScale(1)
               .setEffectiveWeight(1)
               .fadeIn(0.1)
               .play();
-            console.log(player);
             // action.time = 0;
             // player.mixer.stopAllAction();
             player.action = name;
@@ -123,17 +129,24 @@ const Character = () => {
         }
         
         const init = () => {
-          camera = new THREE.PerspectiveCamera( 45, window.innerWidth / window.innerHeight, 1, 2000 )
-          camera.position.set( 100, 200, 500 );
+          camera = new THREE.PerspectiveCamera(
+            45, // fov
+            window.innerWidth / window.innerHeight, // aspect
+            1, // near
+            4000 // far
+          );
+                                            
+          camera.position.set(100, 200, 500);
           // camera.lookAt(target);
+          camera.lookAt(new THREE.Vector3(0, 10, 0));
           setCamera(camera);
 
-          const light = new THREE.HemisphereLight( 0xffffff, 0x444444 );
+          const light = new THREE.HemisphereLight(0xffffff, 0x444444);
           light.position.set( 0, 200, 0);
           scene.add(light);
           
-          light = new THREE.DirectionalLight( 0xffffff );
-          light.position.set( 0, 200, 100 );
+          light = new THREE.DirectionalLight(0xffffff);
+          light.position.set(0, 200, 100);
           light.castShadow = true;
           light.shadow.camera.top = 180;
           light.shadow.camera.bottom = -100;
@@ -141,12 +154,12 @@ const Character = () => {
           light.shadow.camera.right = 120;
           scene.add(light); 
 
-          const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry( 3000, 3000 ), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
+          const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry(3000, 3000), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
           mesh.rotation.x = - Math.PI / 2;
           mesh.receiveShadow = true;
           scene.add(mesh);
 
-          const grid = new THREE.GridHelper( 3000, 20, 0x000000, 0x000000 );
+          const grid = new THREE.GridHelper(3000, 20, 0x000000, 0x000000);
           grid.material.opacity = 0.2;
           grid.material.transparent = true;
           scene.add(grid);
@@ -180,7 +193,7 @@ const Character = () => {
                 }
               })
             });
-
+            console.log(scene);
             scene.add(object);
             player.object = object;
             
@@ -188,6 +201,13 @@ const Character = () => {
               onMove: playerControl,
               container,
             })
+
+            new CameraButton({
+              onClick: changeCamera,
+              container,
+            });
+
+            createCameras();
 
             animations.forEach((animation) => {
               loadNextFBXAnimation(loader, animation);
@@ -208,30 +228,56 @@ const Character = () => {
         const loadNextFBXAnimation = (loader, animation) => {
           loader.load(`${assetsPath}fbx/movements/${animation}.fbx`, (object) => {
             player.object.add(object);
-            player[animation] = { 
-              ...object.animations[0],
-              name: animation,
-            };
-            
-            // player.object.animations.push({
-            //   ...object.animations[0],
-            //   name: animation
-            // });
-            
-            // action.play();
+            player[animation] = object.animations[0];
             if (animation == 'Idle1') {
               action.current = 'Idle1';
             }
-            
           },
             undefined,
             (error) => onError(error),
           )
         }
 
+        const createCameras = () => {
+          const front = new THREE.Object3D();
+          front.position.set(180, 500, 1100);
+          front.parent = player.object;
+
+          const back = new THREE.Object3D();
+          back.position.set(0, 400, -1000);
+          back.parent = player.object;
+
+          const wide = new THREE.Object3D();
+          wide.position.set(250, 600, 1300);
+          wide.parent = player.object;
+
+          const overhead = new THREE.Object3D();
+          overhead.position.set(0, 800, 0);
+          overhead.parent = player.object;
+
+          const collect = new THREE.Object3D();
+          collect.position.set(40, 82, 94);
+          collect.parent = player.object;
+
+          player.cameras = { front, back, wide, overhead, collect };
+          activeCamera.current = player.cameras.wide;
+          cameraFade = 1;
+
+          setTimeout(() => {
+            activeCamera.current = player.cameras.back;
+            cameraFade = 0.01;
+            setTimeout(() => {
+              cameraFade = 0.1;
+            }, 1500);
+          }, 2000);
+        }
+
+        const changeCamera = () => {
+          console.log('??');
+        }
+
         const playerControl = (forward, turn) => {
           turn = -turn;
-          console.log(player);
           if (forward == 0 && turn == 0) {
             player.move = undefined;
           } else {
@@ -297,9 +343,22 @@ const Character = () => {
           }
           
           if (player.move != undefined) {
-            if (player.move.forward > 0) movePlayer(delta);
+            if (player.move.forward != 0) movePlayer(delta);
             player.object.rotateY(player.move.turn * delta);
+          }
+          // console.log(player.object);
+          if (player.cameras != undefined && player.cameras.active != undefined) {
+            camera.position.lerp(
+              player.cameras.active.getWorldPosition(new THREE.Vector3()), 
+              cameraFade
+            );
+            let position;
             
+            position = player.object.position.clone();
+            position.y += 200;
+
+
+            camera.lookAt(position)
           }
           // console.log(player.object);
           renderScene();
