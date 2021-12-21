@@ -75,7 +75,8 @@ const Character = () => {
         let activeCamera = {
           set current(object) {
             player.cameras.active = object;
-          }
+            this.value = object;
+          },
         }
 
         let action = {
@@ -193,7 +194,7 @@ const Character = () => {
                 }
               })
             });
-            console.log(scene);
+            
             scene.add(object);
             player.object = object;
             
@@ -238,6 +239,10 @@ const Character = () => {
           )
         }
 
+        const loadEnvironment = (loader) => {
+          
+        }
+
         const createCameras = () => {
           const front = new THREE.Object3D();
           front.position.set(180, 500, 1100);
@@ -272,8 +277,27 @@ const Character = () => {
           }, 2000);
         }
 
-        const changeCamera = () => {
-          console.log('??');
+        const changeCamera = (fade = 0.05) => {
+          const cameras = Object.keys(player.cameras);
+          cameras.splice(cameras.indexOf('active', 1));
+
+          for (let prop in player.cameras) {
+            if (prop !== 'active') {
+              if (player.cameras['active'] === player.cameras[prop]){
+                const activeCameraIndex = cameras.findIndex((camera) => camera === prop);
+                if(activeCameraIndex === cameras.length - 1) {
+                  activeCameraIndex = 0;
+                } else {
+                  activeCameraIndex += 1;
+                }
+                const nextCamera = player.cameras[cameras[activeCameraIndex]]
+                activeCamera.current = nextCamera;
+                break;
+              }
+            }
+          }
+          cameraFade = fade;
+
         }
 
         const playerControl = (forward, turn) => {
