@@ -240,8 +240,21 @@ const Character = () => {
         }
 
         const loadEnvironment = (loader) => {
-          
-        }
+          loader.load('', (object) => {
+            scene.add(object);
+
+            object.name = "Environment";
+
+            object.traverse((child) => {
+              if(child.isMesh) {
+
+              }
+            })
+          },
+            undefined,
+            (error) => onError(error)
+          )
+        } 
 
         const createCameras = () => {
           const front = new THREE.Object3D();
