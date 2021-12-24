@@ -209,6 +209,7 @@ const Character = () => {
             });
 
             createCameras();
+            loadEnvironment(loader);
 
             animations.forEach((animation) => {
               loadNextFBXAnimation(loader, animation);
@@ -240,14 +241,15 @@ const Character = () => {
         }
 
         const loadEnvironment = (loader) => {
-          loader.load('', (object) => {
+          loader.load(`${assetsPath}fbx/environments/city.fbx`, (object) => {
             scene.add(object);
 
             object.name = "Environment";
 
             object.traverse((child) => {
               if(child.isMesh) {
-
+                child.castShadow = true;
+                child.receiveShadow = true;
               }
             })
           },
