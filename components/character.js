@@ -61,6 +61,7 @@ const Character = () => {
       renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(scW, scH);
       renderer.outputEncoding = THREE.sRGBEncoding;
+      renderer.shadowMap.enabled = true;
       container.appendChild(renderer.domElement);
       setRenderer(renderer);
 
@@ -134,7 +135,7 @@ const Character = () => {
             45, // fov
             window.innerWidth / window.innerHeight, // aspect
             1, // near
-            4000 // far
+            8000 // far
           );
                                             
           camera.position.set(100, 200, 500);
@@ -142,28 +143,47 @@ const Character = () => {
           camera.lookAt(new THREE.Vector3(0, 10, 0));
           setCamera(camera);
 
-          const light = new THREE.HemisphereLight(0xffffff, 0x444444);
-          light.position.set( 0, 200, 0);
-          scene.add(light);
+          scene.background = new THREE.Color(0xa0a0a0);
+            
+          const hemiLight = new THREE.HemisphereLight(0xffffff, 0x444444);
+          hemiLight.position.set(0, 20, 0);
+          scene.add(hemiLight);
+
+          const dirLight = new THREE.DirectionalLight(0xffffff);
+          dirLight.position.set(150, 70, 100);
+          dirLight.castShadow = true;
+          dirLight.shadow.camera.top = 1000;
+          dirLight.shadow.camera.bottom = 0;
+          dirLight.shadow.camera.left = - 500;
+          dirLight.shadow.camera.right = 500;
+          dirLight.shadow.camera.near = 0.1;
+          dirLight.shadow.camera.far = 10000;
+          scene.add(dirLight);
+
+          // const light = new THREE.HemisphereLight(0xffffff, 0x444444);
+          // light.position.set(0, 200, 0);
+          // scene.add(light);
           
-          light = new THREE.DirectionalLight(0xffffff);
-          light.position.set(0, 200, 100);
-          light.castShadow = true;
-          light.shadow.camera.top = 180;
-          light.shadow.camera.bottom = -100;
-          light.shadow.camera.left = - 120;
-          light.shadow.camera.right = 120;
-          scene.add(light); 
+          // light = new THREE.DirectionalLight(0xffffff);
+          // light.position.set(0, 200, 100);
+          // light.castShadow = true;
+          // light.shadow.camera.top = 1000;
+          // light.shadow.camera.bottom = 500;
+          // light.shadow.camera.left = - 2;
+          // light.shadow.camera.right = 2;
+          // light.shadow.camera.near = 0.1;
+          // light.shadow.camera.far = 10000;
+          // scene.add(light); 
 
           const mesh = new THREE.Mesh( new THREE.PlaneBufferGeometry(3000, 3000), new THREE.MeshPhongMaterial( { color: 0x999999, depthWrite: false } ) );
           mesh.rotation.x = - Math.PI / 2;
           mesh.receiveShadow = true;
           scene.add(mesh);
 
-          const grid = new THREE.GridHelper(3000, 20, 0x000000, 0x000000);
-          grid.material.opacity = 0.2;
-          grid.material.transparent = true;
-          scene.add(grid);
+          // const grid = new THREE.GridHelper(3000, 20, 0x000000, 0x000000);
+          // grid.material.opacity = 0.2;
+          // grid.material.transparent = true;
+          // scene.add(grid);
 
           const loader = new FBXLoader();
           loader.load(`${assetsPath}fbx/FireFighter.fbx`, (object) => {
@@ -177,6 +197,8 @@ const Character = () => {
             
             object.name = "Character";
             object.scale.set(0.5, 0.5, 0.5);
+            // object.position.set(-800, -340, 0);
+            object.position.set(0, 0, 0);
             // object.position.x = -60;
 
             object.traverse((child) => {
@@ -209,7 +231,7 @@ const Character = () => {
             });
 
             createCameras();
-            loadEnvironment(loader);
+            // loadEnvironment(loader);
 
             animations.forEach((animation) => {
               loadNextFBXAnimation(loader, animation);
@@ -245,8 +267,11 @@ const Character = () => {
             scene.add(object);
 
             object.name = "Environment";
+            object.scale.set(3, 3, 3);
+            object.position.set(0, 0, 0);
 
             object.traverse((child) => {
+              console.log(child.isMesh);
               if(child.isMesh) {
                 child.castShadow = true;
                 child.receiveShadow = true;
@@ -264,7 +289,7 @@ const Character = () => {
           front.parent = player.object;
 
           const back = new THREE.Object3D();
-          back.position.set(0, 400, -1000);
+          back.position.set(0, 400, - 1000);
           back.parent = player.object;
 
           const wide = new THREE.Object3D();
